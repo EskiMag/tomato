@@ -278,7 +278,7 @@ defmodule Tomato do
     query = [res_id: id]
 
     with {:ok, response} <- @client.get("dailymenu", query) do
-      dailymenu = Tomato.Dailymenu.from(response)
+      dailymenu = Enum.map(response["daily_menus"], &Tomato.Dailymenu.from/1)
       {:ok, dailymenu}
     end
   end
