@@ -22,7 +22,7 @@ defmodule Tomato do
       categories =
         response
         |> Map.get("categories")
-        |> Enum.map(fn(category) ->
+        |> Enum.map(fn category ->
           Tomato.Category.from(category["categories"])
         end)
 
@@ -56,7 +56,7 @@ defmodule Tomato do
       cities =
         response
         |> Map.get("location_suggestions")
-        |> Enum.map(fn(city) ->
+        |> Enum.map(fn city ->
           Tomato.City.from(city)
         end)
 
@@ -89,7 +89,7 @@ defmodule Tomato do
       collections =
         response
         |> Map.get("collections")
-        |> Enum.map(fn(collection) ->
+        |> Enum.map(fn collection ->
           Tomato.Collection.from(collection["collection"])
         end)
 
@@ -116,7 +116,7 @@ defmodule Tomato do
       cuisines =
         response
         |> Map.get("cuisines")
-        |> Enum.map(fn(%{"cuisine" => cuisine}) ->
+        |> Enum.map(fn %{"cuisine" => cuisine} ->
           Tomato.Cuisine.from(cuisine)
         end)
 
@@ -143,7 +143,7 @@ defmodule Tomato do
       establishments =
         response
         |> Map.get("establishments")
-        |> Enum.map(fn(establishment) ->
+        |> Enum.map(fn establishment ->
           Tomato.Establishment.from(establishment["establishment"])
         end)
 
@@ -264,13 +264,22 @@ defmodule Tomato do
       restaurants =
         response
         |> Map.get("restaurants")
-        |> Enum.map(fn(restaurant) ->
+        |> Enum.map(fn restaurant ->
           Tomato.Restaurant.from(restaurant["restaurant"])
         end)
 
       {:ok, restaurants}
     else
       error -> error
+    end
+  end
+
+  def dailymenu(id) do
+    query = [res_id: id]
+
+    with {:ok, response} <- @client.get("dailymenu", query) do
+      dailymenu = Tomato.Dailymenu.from(response)
+      {:ok, dailymenu}
     end
   end
 end
